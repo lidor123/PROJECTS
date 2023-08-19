@@ -1,0 +1,348 @@
+#!/bin/bash
+
+#main menu here.
+
+echo "WELLCOME TO ARTIFACTS ANALYZER"
+echo "MENU"
+echo "FOR BINWALK ENTER 1"
+echo "FOR BULK_EXTRACTOR ENTER 2"
+echo "FOR FOREMOAT ENTER 3"
+echo "FOR VOLATILTY PRESS 4"
+echo "TO QUIT PRESS 5 "
+echo "GIVE ME NUMBER"
+echo "."
+echo "."
+echo "."
+echo "."
+read input
+if [[ "$input" == "1" ]]
+then
+        function name1() {
+
+
+echo "FOR HDD PRESS 1 "
+echo "FOR MEM PRESS 2"
+read input
+if [ $input -eq 1 ]
+then
+	echo "GIVE ME THE NEME OF THE HDD FILE (HDD.001)"
+	read input
+	sudo binwalk -B  ../Downloads/$input
+
+echo "DONE" 
+
+./proxxx1.sh
+
+
+elif [ $input -eq 2 ]
+then
+
+	echo "GIVE ME THE NEME OF THE MEMORY FILE  (memdump.mem)  "
+        read input
+	sudo binwalk -B  ../Downloads/$input
+
+echo "DONE"
+
+./proxxx1.sh
+
+else echo "DONE"
+
+./proxxx1.sh
+
+fi
+
+
+
+}
+name1
+
+elif  [[ "$input" == "2" ]]
+then
+        function name2() {
+
+echo "FOR HDD PRESS 1, FOR MEM PRESS 2"
+read input
+if [ $input -eq 1 ]
+then
+	echo "GIVE ME THE NEME OF THE HDD FILE (HDD.001)"
+        read input
+	sudo bulk_extractor  ../Downloads/$input -o  extract
+
+echo "DONE"
+
+        ./proxxx1.sh
+
+
+elif [ $input -eq 2 ]
+then
+	 echo "GIVE ME THE NEME OF THE MEMORY FILE  (memdump.mem)" 
+        read input
+	sudo bulk_extractor  ../Downloads/$input -o extract
+
+echo "DONE"
+
+        ./proxxx1.sh
+
+
+else  echo "DONE"
+      
+	./proxxx1.sh
+
+fi
+}
+
+name2
+
+elif [[ "$input" == "3" ]]
+then
+        function name3() {
+
+echo "FOR FULL HDD PRESS 1"
+echo "FOR FULL MEMURY PRESS 2"
+read input 
+if [ $input -eq 1 ]
+then 
+	echo "GIVE ME THE NEME OF THE HDD FILE (HDD.001)" 
+        read input
+	sudo foremost -d -T -v -o all ../Downloads/$input
+
+echo "DONE"
+
+        ./proxxx1.sh
+
+
+
+elif [ $input -eq 2 ] 
+then
+	echo "GIVE ME THE NEME OF THE MEMORY FILE  (memdump.mem)"
+        read input
+	sudo foremost -d -T -v -o all ../Downloads/$input
+
+
+echo "DONE"
+
+        ./proxxx1.sh
+
+
+fi
+
+./proxxx1.sh
+
+
+
+
+}
+name3
+
+elif [[ "$input" == "4" ]]
+then
+        function name4() {
+#this is the secend menu the one of volatility.
+
+echo "WELLCOME THIS IS THE VOL MENU" 
+sleep 0.05
+echo "PRESS 1 FOR IMEGEINFO"
+sleep 0.05
+echo "PRESS 2 FOR PSLIST"
+sleep 0.05
+echo "PRESS 3 FOR CONNECTION/CONNSCAN"
+sleep 0.05
+echo "PRESS 4 FOR PARSER MFT FOR A SPECIFIC EXE FILE"
+sleep 0.05
+echo "PRESS 5 FOR HASHDUMP"
+sleep 0.05
+echo "PRESS 6 FOR EXTRACT COMMANDS  FROM CMD"
+sleep 0.05
+echo "PRESS 7 FOR ASK THE USER TO SPECIFY A PID AND PRINT ITS PIDD (IF THERE IS ONE)" 
+
+echo "PRESS 8 FOR MAIN MENU"
+
+echo "WHET WHOLD YOU WANT TO DO"
+read input
+if [[ "$input" == "1" ]]
+then
+        function nameA() {
+
+                cd "/home/kali/Desktop/vol/volatility_2.6_lin64_standalone"
+
+ sudo su root -c "./volatility_2.6_lin64_standalone -f ../../../Downloads/memdump.mem imageinfo"
+
+
+
+
+}
+nameA
+
+elif [[ "$input" == "2" ]]
+then
+        function nameB() {
+
+
+cd  "/home/kali/Desktop/vol/volatility_2.6_lin64_standalone"
+
+echo "GIVE ME THE WINDOWS PROFILE YOU WANT TO WORK (Win7SP1x64 WORK FINE)"
+
+read input 
+
+sudo su root -c  "./volatility_2.6_lin64_standalone -f  ../../../Downloads/memdump.mem --profile=$input   pslist"   
+
+
+echo "DONE"
+
+
+
+
+}
+nameB
+
+elif [[ "$input" == "3" ]]
+then
+	function nameC() {
+
+cd   "/home/kali/Desktop/vol/volatility_2.6_lin64_standalone"
+
+sudo su root -c  "./volatility_2.6_lin64_standalone -f ../../../Downloads/memdump.mem  connscan" 
+
+
+
+
+}
+nameC
+
+elif [[ "$input" == "4" ]]
+then
+	function nameD() {
+
+echo "DO YOU WANT SPACIFIC FILE TO BE CHECK?"
+read input
+if [[ "$input" == "yes" ]] 
+then
+	echo "GIVE ME EXE FILE NAME"
+	read input
+	echo "I NEED PROFILE TOO (Win7SP1x64)"
+	read pizza
+cd   "/home/kali/Desktop/vol//volatility_2.6_lin64_standalone"
+
+sudo su root -c "./volatility_2.6_lin64_standalone -f ../../../Downloads/memdump.mem --profile=$pizza   mftparser $input  " 
+
+else
+	echo "I NEED PROFILE  (Win7SP1x64)"
+        read pizza
+	cd   "/home/kali/Desktop/vol//volatility_2.6_lin64_standalone"
+
+sudo su root -c "./volatility_2.6_lin64_standalone -f ../../../Downloads/memdump.mem --profile=$pizza   mftparser"	
+
+
+fi
+
+
+
+}
+nameD
+
+elif [[ "$input" == "5" ]]
+then 
+	function nameE() { 
+
+
+cd   "/home/kali/Desktop/vol//volatility_2.6_lin64_standalone"
+
+echo "GIVE ME THE WINDOWS PROFILE YOU WANT TO WORK (Win7SP1x64 WORK FINE)"
+
+read input
+
+sudo su root -c "./volatility_2.6_lin64_standalone -f ../../../Downloads/memdump.mem --profile=$input  hashdump" 
+
+
+
+
+
+}
+nameE
+
+elif [[ "$input" == "6" ]]  
+then
+	function nameF() {
+
+
+cd   "/home/kali/Desktop/vol/volatility_2.6_lin64_standalone"
+
+echo "GIVE ME THE WINDOWS PROFILE YOU WANT TO WORK (Win7SP1x64 WORK FINE)"
+
+read input
+
+sudo su root -c "./volatility_2.6_lin64_standalone -f ../../../Downloads/memdump.mem --profile=$input cmdscan"
+
+
+}
+nameF
+
+elif [[ "$input" == "7" ]]
+then
+	function nameG() {
+
+
+
+cd  "/home/kali/Desktop/vol/volatility_2.6_lin64_standalone"
+
+echo "give me pid"
+
+read input
+
+echo "GIVE ME THE WINDOWS PROFILE YOU WANT TO WORK (Win7SP1x64 WORK FINE)"
+
+read  food
+
+sudo su root -c "./volatility_2.6_lin64_standalone -f ../../../Downloads/memdump.mem --profile=$food  pslist --pid=$input" 
+
+
+
+
+}
+nameG
+
+elif [[ "$input" == "8" ]]
+then
+	function nameH() {
+
+echo "GOING BACK"
+echo "."
+echo "."
+echo "."
+
+./proxxx1.sh
+
+
+} 
+nameH
+
+fi
+
+
+}
+name4
+
+elif  [[ "$input" == "2" ]]
+then 
+        function name2() {
+
+
+
+
+
+exit
+
+
+
+}
+ 
+name5
+
+
+
+
+
+
+	fi
+
+
