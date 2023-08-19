@@ -1,0 +1,182 @@
+#!/bin/bash
+ 
+
+#THIS ALL SCRIPT IS WRITHING ON TSHARK - NO OTHER PROGREM WORK WELL ON MY KALI LINUX.
+
+        echo "DID YOU WANT ME TO INSTALL THE DEFAULT HUNTER FILES IN YOUR LINUX ?"
+        echo "PRESS 1 FOR ME TO INSTALL THEM"
+        echo "PRESS 2 FOR NO"
+        read ZXC
+        if [[ $ZXC == "1" ]]
+        then 
+                mkdir HUNTER
+                cd HUNTER
+                mkdir logandoudit
+        else 
+                sleep 1
+        fi
+
+        echo "MENU IS UP!!!"
+        sleep 1
+        echo "WELLCOME TO NF PROJECT 'HUNTER' "
+        echo "THIS IS THE MAIN MENU"
+        echo "FOR NETWORK ANALISI PREES 1"
+        echo "FOR FILE ANALISS PRESS 2"
+        echo "FOR LOG AND AUDIT PRESS 3"
+        echo "FOR EXIT PRESS 4"
+        read input
+
+#IN THE FIRST PART OF THE SCRIPT YOU WILL SHERCH BAD IP OR URL FROM SELF MAID URL LIST OUT OF 
+#TOTAL VIRUS LISTS AND SOME MADE UP IP THET I MAKE
+#YOU WILL BE ASKED WHET YOU WANNA CHECK MALICIOUS IP/URL.
+#THE SCRIPT WILL RUN CHECK THE SELF MAID IOC LIST AND THEN
+#WILL RUN LIVE BROADCAST TO CHECK THE SPESIFIC IP/URL YOU WANNA FIND OUT
+#IIN THE END OF THE CHECKING TO STOP THE CAPTERING AND CONTINEW FOR SAVE RUN CTRL +C
+#MAKE SURE THE /TMP FILE IS EMPTY  BEFOHR THE BRODECAST THE NAME OF THE PCAPNG SAVED DIFFRENTLEY. 
+
+        if [[ $input == "1" ]]
+        then
+                function netanal () {
+sudo su root -c "tshark -i eth0 -q & "
+echo "GIVE ME BAD URL OR IP (  https://www.greenboysdispensary.shop )"
+read input
+echo "GIVE ME THE PATH FOR THE IOC LIST ( /home/kali/Desktop/badlist.txt  )"
+read input2
+sudo cat $input2 | grep $input
+sleep 2
+echo "CHOSE WHET YOU WANT TSHARK TO SEARCH"
+echo "FOR MELICIOS URL PRESS 1 (  www.airedalechemicalcompanyltd.com )"
+echo "PRESS 2 FOR TSHARK IP MELICUS CHECK"
+read input3
+if [[ $input3 == "1" ]]
+then
+        echo "GIVE ME THE URL ( https://www.greenboysdispensary.shop )"
+        read input4
+sudo su root  -c "tshark -i any  -t ad -Y  http.request && !http.request.uri contains $input4"
+sleep 2
+ls /tmp
+sleep 5
+echo "GIVE ME THE FILE NAME AND  PATH  YOU WANNA COPY"
+read inputX
+echo "GIVE ME THE NEW NAME OF THE FILE YOU COPY" 
+read inputY
+sudo cp  /tmp/$inputX /home/kali/Desktop/HUNTER/logandoudit/$inputY
+elif [[ $input3 == "2" ]]
+then
+
+        echo "GIVE ME THE IP"
+        read input5
+sudo su root -c "tshark -i eth0  -t ad  -l -Y ip.addr==$input5" 
+sleep 2
+ls /tmp 
+sleep 2
+echo "GIVE ME THE FILE NAME AND  PATH  YOU WANNA COPY"
+read inputX
+echo "GIVE ME THE NEW NAME OF PCAPNG THE FILE YOU COPY" 
+read inputY
+sudo cp  /tmp/$inputX /home/kali/Desktop/HUNTER/logandoudit/$inputY
+
+
+fi
+
+         
+
+}
+
+netanal
+
+#IN THE SECOEND PART WE DO CHECK TO BAD HASES FROM EXTRACT FILES.
+#THE SCRIPT WILL ASK YOU TO GIVE THE FULL PATH TO THE PCAP/PCAPNG YOU WANT TO CHECK.
+#THEN YOU WILL BE ASKED FOR THE DIRECTORY YOU WANT TO EXTRACT IT/
+#AFTER THET THE SCRIPT WILL CHECK FOR BAD  HASHES FROM SELF MIDE IOC.
+#HE WILL FIRST CONVERT THE FILE NAME TO HASH AND THEN WILL COMPERE IT 
+#TO THE THOSE THET ARE IN THE IOC LIST.
+#IF THE HASH IS  BAD HE WILL REAPER IN THE LOWES LINE AND QUIT. 
+
+
+elif [[ $input == "2" ]]
+then
+        function analize () {
+echo "GIVE ME THE FULL PATH TO THE FILES ( /home/kali/Downloads/Dump6.pcap )"
+read input
+echo "GIVE ME THE NAME OF THE DIRECTORY YOU WANT TO THE EXTRACT FILES"
+read Fname
+sudo tshark -r $input --export-objects "http,$Fname"
+ls -a $Fname
+echo " NOW I WILL CHECK FOR BAD HASHES"
+echo "GIVE ME THE NAME OF THE DIRECTORY YOU EXTRACT THE FILES TO"
+read Fname1
+cd /home/kali/Desktop/$Fname1
+ls
+echo "WHICH FILE WHOLD YOU LIKE TO CHECK?"
+read INPUT
+echo 
+md5sum $INPUT | awk '{ print $1 }'
+sleep 5
+echo "GIVE ME THE FILE HASH FOR CHECKING"
+read hash1
+echo "GIVE ME THE PATH FOR THE IOC LIST (   /home/kali/Desktop/badlist.txt  )"
+read hash2
+sudo cat $hash2 | grep $hash1
+
+
+
+
+
+}
+
+analize
+
+elif [[ $input == "3" ]]
+then
+        function logandoudit () {
+
+sudo ls /home/kali/Desktop/HUNTER/logandoudit
+echo "WHICE FILE YOU WANNA CHECK FOR DATE AND TIME?" 
+read good
+sudo tshark -r  /home/kali/Desktop/HUNTER/logandoudit/$good -t ad
+
+
+
+
+
+#IN THE LAST PART WE WILL CHECK FOR DATE AND TIME OF PRE SAVED PCAP/PCAPNG FILES
+#NOTE THET YOU HAVE TO SAVE THE FILES TO  /home/kali/Desktop/HUNTER/logandoudit/
+#IF YOU WANT TO CHECK THEM.
+#SIMPLY INSURT THE PCAP/PCAPNG FILE YOU WANNA CHECK AND TSHARK WILL DO THE REST.
+#MAKE SURE DO THET YOU DO CHECKING PCAP/NG  FILES OR IT WONT WORK.
+
+
+
+
+
+
+}
+
+logandoudit
+
+elif [[ $input == "4" ]]
+then
+        function moni () {
+
+
+exit
+
+
+
+
+
+}
+
+moni
+
+
+
+fi
+
+
+
+
+
+
+#BIG CREDIT AND THENKS TO VIREUS TOTAL!
